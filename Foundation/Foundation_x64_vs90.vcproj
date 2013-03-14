@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9,00"
+	Version="9.00"
 	Name="Foundation"
 	ProjectGUID="{8164D41D-B053-405B-826C-CF37AC0EF176}"
 	RootNamespace="Foundation"
@@ -1191,6 +1191,14 @@
 					>
 				</File>
 				<File
+					RelativePath=".\include\Poco\ObjectPool.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\Poco\Optional.h"
+					>
+				</File>
+				<File
 					RelativePath=".\include\Poco\Platform.h"
 					>
 				</File>
@@ -2359,10 +2367,6 @@
 					>
 				</File>
 				<File
-					RelativePath=".\src\MD2Engine.cpp"
-					>
-				</File>
-				<File
 					RelativePath=".\src\MD4Engine.cpp"
 					>
 				</File>
@@ -2396,10 +2400,6 @@
 				</File>
 				<File
 					RelativePath=".\include\Poco\HMACEngine.h"
-					>
-				</File>
-				<File
-					RelativePath=".\include\Poco\MD2Engine.h"
 					>
 				</File>
 				<File
@@ -3737,6 +3737,10 @@
 					</FileConfiguration>
 				</File>
 				<File
+					RelativePath=".\src\DirectoryWatcher.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\src\File.cpp"
 					>
 				</File>
@@ -4190,6 +4194,10 @@
 				</File>
 				<File
 					RelativePath=".\include\Poco\DirectoryIterator_WIN32U.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\Poco\DirectoryWatcher.h"
 					>
 				</File>
 				<File
@@ -5757,15 +5765,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\include\Poco\AccessExpirationDecorator.h"
-					>
-				</File>
-				<File
 					RelativePath=".\include\Poco\BasicEvent.h"
-					>
-				</File>
-				<File
-					RelativePath=".\include\Poco\CompareFunctions.h"
 					>
 				</File>
 				<File
@@ -5816,6 +5816,10 @@
 					RelativePath=".\include\Poco\PriorityExpire.h"
 					>
 				</File>
+				<File
+					RelativePath=".\include\Poco\PriorityStrategy.h"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="Source Files"
@@ -5838,6 +5842,10 @@
 				</File>
 				<File
 					RelativePath=".\include\Poco\AbstractStrategy.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\Poco\AccessExpirationDecorator.h"
 					>
 				</File>
 				<File
@@ -5970,6 +5978,42 @@
 				</File>
 			</Filter>
 		</Filter>
+		<File
+			RelativePath="..\DLLVersion.rc"
+			>
+			<FileConfiguration
+				Name="release_static_md|x64"
+				ExcludedFromBuild="true"
+				>
+				<Tool
+					Name="VCResourceCompilerTool"
+				/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="debug_static_md|x64"
+				ExcludedFromBuild="true"
+				>
+				<Tool
+					Name="VCResourceCompilerTool"
+				/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="debug_static_mt|x64"
+				ExcludedFromBuild="true"
+				>
+				<Tool
+					Name="VCResourceCompilerTool"
+				/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="release_static_mt|x64"
+				ExcludedFromBuild="true"
+				>
+				<Tool
+					Name="VCResourceCompilerTool"
+				/>
+			</FileConfiguration>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

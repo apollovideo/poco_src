@@ -1,7 +1,7 @@
 //
 // File2Page.cpp
 //
-// $Id: //poco/1.4/PageCompiler/File2Page/src/File2Page.cpp#1 $
+// $Id: //poco/1.4/PageCompiler/File2Page/src/File2Page.cpp#4 $
 //
 // An application that creates a Page Compiler source file from an
 // ordinary file.
@@ -88,39 +88,53 @@ protected:
 		Application::defineOptions(options);
 
 		options.addOption(
-			Option("help", "h", "display help information on command line arguments")
+			Option("help", "h", "Display help information on command line arguments.")
 				.required(false)
 				.repeatable(false)
 				.callback(OptionCallback<File2PageApp>(this, &File2PageApp::handleHelp)));
 
 		options.addOption(
-			Option("contentType", "t", "specify a content type")
+			Option("contentType", "t", "Specify a content type.")
 				.required(false)
 				.repeatable(false)
 				.argument("MIME-Type")
 				.callback(OptionCallback<File2PageApp>(this, &File2PageApp::handleContentType)));
-				
+
 		options.addOption(
-			Option("class", "c", "specify the handler class name")
+			Option("contentLanguage", "l", "Specify a content language.")
+				.required(false)
+				.repeatable(false)
+				.argument("language")
+				.callback(OptionCallback<File2PageApp>(this, &File2PageApp::handleContentLang)));
+								
+		options.addOption(
+			Option("class", "c", "Specify the handler class name.")
 				.required(false)
 				.repeatable(false)
 				.argument("class-name")
 				.callback(OptionCallback<File2PageApp>(this, &File2PageApp::handleClassName)));
 
 		options.addOption(
-			Option("namespace", "n", "specify the handler class namespace name")
+			Option("namespace", "n", "Specify the handler class namespace name.")
 				.required(false)
 				.repeatable(false)
 				.argument("namespace-name")
 				.callback(OptionCallback<File2PageApp>(this, &File2PageApp::handleNamespace)));
 	
 		options.addOption(
-			Option("output", "o", "specify the output file name")
+			Option("output", "o", "Specify the output file name.")
 				.required(false)
 				.repeatable(false)
 				.argument("path")
 				.callback(OptionCallback<File2PageApp>(this, &File2PageApp::handleOutput)));
-}
+
+		options.addOption(
+			Option("path", "p", "Specify the server path of the file.")
+				.required(false)
+				.repeatable(false)
+				.argument("path")
+				.callback(OptionCallback<File2PageApp>(this, &File2PageApp::handlePath)));
+	}
 	
 	void handleHelp(const std::string& name, const std::string& value)
 	{
@@ -132,6 +146,11 @@ protected:
 	void handleContentType(const std::string& name, const std::string& value)
 	{
 		_contentType = value;
+	}
+
+	void handleContentLang(const std::string& name, const std::string& value)
+	{
+		_contentLang = value;
 	}
 	
 	void handleClassName(const std::string& name, const std::string& value)
@@ -149,12 +168,18 @@ protected:
 		_output = value;
 	}
 
+	void handlePath(const std::string& name, const std::string& value)
+	{
+		_path = value;
+	}
+
 	void displayHelp()
 	{
 		HelpFormatter helpFormatter(options());
 		helpFormatter.setCommand(commandName());
 		helpFormatter.setUsage("OPTIONS");
 		helpFormatter.setHeader("Create a PageCompiler source file from a binary file.");
+		helpFormatter.setIndent(8);
 		helpFormatter.format(std::cout);
 	}
 	
@@ -181,11 +206,19 @@ protected:
 		Poco::FileInputStream istr(path);
 		Poco::FileOutputStream ostr(op.toString());
 		ostr << "<%@ page\n"
-		     << "    contentType=\"" << _contentType << "\"\n"
-		     << "    form=\"false\"\n"
+		     << "    contentType=\"" << _contentType << "\"\n";
+		if (!_contentLang.empty())
+		{
+			ostr << "    contentLanguage=\"" << _contentLang << "\"\n";
+		}
+		ostr << "    form=\"false\"\n"
 		     << "    namespace=\"" << _namespace << "\"\n"
-		     << "    class=\"" << _clazz << "\"\n"
-		     << "    precondition=\"checkModified(request)\"%><%@"
+		     << "    class=\"" << _clazz << "\"\n";
+		if (!_path.empty())
+		{
+			ostr << "    path=\"" << _path << "\"\n";
+		}
+		ostr << "    precondition=\"checkModified(request)\"%><%@"
 		     << "    impl include=\"Poco/DateTime.h\"\n"
 		     << "         include=\"Poco/DateTimeParser.h\"\n"
 		     << "         include=\"Poco/DateTimeFormatter.h\"\n"
@@ -251,6 +284,8 @@ protected:
 			return "text/css";
 		else if (ext == "js")
 			return "application/javascript";
+		else if (ext == "xml")
+			return "text/xml";
 		else
 			return "application/binary";
 	}
@@ -270,9 +305,11 @@ protected:
 private:
 	bool _helpRequested;
 	std::string _contentType;
+	std::string _contentLang;
 	std::string _clazz;
 	std::string _namespace;
 	std::string _output;
+	std::string _path;
 };
 
 

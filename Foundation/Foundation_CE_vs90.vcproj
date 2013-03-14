@@ -44,7 +44,7 @@
 				ExecutionBucket="7"
 				Optimization="0"
 				AdditionalIncludeDirectories=".\include;.\wcelibcex-1.0\src"
-				PreprocessorDefinitions="_DEBUG;_WIN32_WCE=$(CEVER);UNDER_CE;WINCE;$(ARCHFAM);$(_ARCHFAM_);_UNICODE;UNICODE;PCRE_STATIC;$(ProjectName)_EXPORTS;_CRT_SECURE_NO_DEPRECATE;_CRT_SECURE_NO_WARNINGS"
+				PreprocessorDefinitions="_DEBUG;_WIN32_WCE=$(CEVER);UNDER_CE;WINCE;$(ARCHFAM);$(_ARCHFAM_);_UNICODE;UNICODE;PCRE_STATIC;$(ProjectName)_EXPORTS;_CRT_SECURE_NO_DEPRECATE;_CRT_SECURE_NO_WARNINGS;POCO_NO_LOCALE"
 				StringPooling="true"
 				MinimalRebuild="false"
 				RuntimeLibrary="3"
@@ -61,6 +61,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="_UNICODE;UNICODE;_WIN32_WCE"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
@@ -140,7 +141,7 @@
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
 				AdditionalIncludeDirectories=".\include;.\wcelibcex-1.0\src"
-				PreprocessorDefinitions="NDEBUG;_WIN32_WCE=$(CEVER);UNDER_CE;WINCE;$(ARCHFAM);$(_ARCHFAM_);_UNICODE;UNICODE;PCRE_STATIC;$(ProjectName)_EXPORTS;_CRT_SECURE_NO_DEPRECATE;_CRT_SECURE_NO_WARNINGS"
+				PreprocessorDefinitions="NDEBUG;_WIN32_WCE=$(CEVER);UNDER_CE;WINCE;$(ARCHFAM);$(_ARCHFAM_);_UNICODE;UNICODE;PCRE_STATIC;$(ProjectName)_EXPORTS;_CRT_SECURE_NO_DEPRECATE;_CRT_SECURE_NO_WARNINGS;POCO_NO_LOCALE"
 				StringPooling="true"
 				MinimalRebuild="false"
 				RuntimeLibrary="2"
@@ -157,6 +158,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="_UNICODE;UNICODE;_WIN32_WCE"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
@@ -233,7 +235,7 @@
 				ExecutionBucket="7"
 				Optimization="0"
 				AdditionalIncludeDirectories=".\include;.\wcelibcex-1.0\src"
-				PreprocessorDefinitions="_DEBUG;_WIN32_WCE=$(CEVER);UNDER_CE;WINCE;_LIB;$(ARCHFAM);$(_ARCHFAM_);_UNICODE;UNICODE;PCRE_STATIC;POCO_STATIC;_CRT_SECURE_NO_DEPRECATE;_CRT_SECURE_NO_WARNINGS"
+				PreprocessorDefinitions="_DEBUG;_WIN32_WCE=$(CEVER);UNDER_CE;WINCE;_LIB;$(ARCHFAM);$(_ARCHFAM_);_UNICODE;UNICODE;PCRE_STATIC;POCO_STATIC;_CRT_SECURE_NO_DEPRECATE;_CRT_SECURE_NO_WARNINGS;POCO_NO_LOCALE"
 				StringPooling="true"
 				MinimalRebuild="false"
 				RuntimeLibrary="1"
@@ -252,6 +254,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="_UNICODE;UNICODE;_WIN32_WCE"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
@@ -317,7 +320,7 @@
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
 				AdditionalIncludeDirectories=".\include;.\wcelibcex-1.0\src"
-				PreprocessorDefinitions="NDEBUG;_WIN32_WCE=$(CEVER);UNDER_CE;WINCE;_LIB;$(ARCHFAM);$(_ARCHFAM_);_UNICODE;UNICODE;PCRE_STATIC;POCO_STATIC;_CRT_SECURE_NO_DEPRECATE;_CRT_SECURE_NO_WARNINGS"
+				PreprocessorDefinitions="NDEBUG;_WIN32_WCE=$(CEVER);UNDER_CE;WINCE;_LIB;$(ARCHFAM);$(_ARCHFAM_);_UNICODE;UNICODE;PCRE_STATIC;POCO_STATIC;_CRT_SECURE_NO_DEPRECATE;_CRT_SECURE_NO_WARNINGS;POCO_NO_LOCALE"
 				StringPooling="true"
 				MinimalRebuild="false"
 				RuntimeLibrary="0"
@@ -336,6 +339,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="_UNICODE;UNICODE;_WIN32_WCE"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
@@ -399,7 +403,7 @@
 				ExecutionBucket="7"
 				Optimization="0"
 				AdditionalIncludeDirectories=".\include;.\wcelibcex-1.0\src"
-				PreprocessorDefinitions="_DEBUG;_WIN32_WCE=$(CEVER);UNDER_CE;WINCE;_LIB;$(ARCHFAM);$(_ARCHFAM_);_UNICODE;UNICODE;PCRE_STATIC;POCO_STATIC;_CRT_SECURE_NO_DEPRECATE;_CRT_SECURE_NO_WARNINGS"
+				PreprocessorDefinitions="_DEBUG;_WIN32_WCE=$(CEVER);UNDER_CE;WINCE;_LIB;$(ARCHFAM);$(_ARCHFAM_);_UNICODE;UNICODE;PCRE_STATIC;POCO_STATIC;_CRT_SECURE_NO_DEPRECATE;_CRT_SECURE_NO_WARNINGS;POCO_NO_LOCALE"
 				StringPooling="true"
 				MinimalRebuild="false"
 				RuntimeLibrary="3"
@@ -418,6 +422,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="_UNICODE;UNICODE;_WIN32_WCE"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
@@ -483,7 +488,7 @@
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
 				AdditionalIncludeDirectories=".\include;.\wcelibcex-1.0\src"
-				PreprocessorDefinitions="NDEBUG;_WIN32_WCE=$(CEVER);UNDER_CE;WINCE;_LIB;$(ARCHFAM);$(_ARCHFAM_);_UNICODE;UNICODE;PCRE_STATIC;POCO_STATIC;_CRT_SECURE_NO_DEPRECATE;_CRT_SECURE_NO_WARNINGS"
+				PreprocessorDefinitions="NDEBUG;_WIN32_WCE=$(CEVER);UNDER_CE;WINCE;_LIB;$(ARCHFAM);$(_ARCHFAM_);_UNICODE;UNICODE;PCRE_STATIC;POCO_STATIC;_CRT_SECURE_NO_DEPRECATE;_CRT_SECURE_NO_WARNINGS;POCO_NO_LOCALE"
 				StringPooling="true"
 				MinimalRebuild="false"
 				RuntimeLibrary="2"
@@ -502,6 +507,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="_UNICODE;UNICODE;_WIN32_WCE"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
@@ -1812,10 +1818,6 @@
 					>
 				</File>
 				<File
-					RelativePath=".\src\MD2Engine.cpp"
-					>
-				</File>
-				<File
 					RelativePath=".\src\MD4Engine.cpp"
 					>
 				</File>
@@ -1849,10 +1851,6 @@
 				</File>
 				<File
 					RelativePath=".\include\Poco\HMACEngine.h"
-					>
-				</File>
-				<File
-					RelativePath=".\include\Poco\MD2Engine.h"
 					>
 				</File>
 				<File
@@ -3232,6 +3230,10 @@
 					</FileConfiguration>
 				</File>
 				<File
+					RelativePath=".\src\DirectoryWatcher.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\src\File.cpp"
 					>
 				</File>
@@ -3789,6 +3791,10 @@
 				</File>
 				<File
 					RelativePath=".\include\Poco\DirectoryIterator_WIN32U.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\Poco\DirectoryWatcher.h"
 					>
 				</File>
 				<File
@@ -5480,15 +5486,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\include\Poco\AccessExpirationDecorator.h"
-					>
-				</File>
-				<File
 					RelativePath=".\include\Poco\BasicEvent.h"
-					>
-				</File>
-				<File
-					RelativePath=".\include\Poco\CompareFunctions.h"
 					>
 				</File>
 				<File
@@ -5539,6 +5537,10 @@
 					RelativePath=".\include\Poco\PriorityExpire.h"
 					>
 				</File>
+				<File
+					RelativePath=".\include\Poco\PriorityStrategy.h"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="Source Files"
@@ -5561,6 +5563,10 @@
 				</File>
 				<File
 					RelativePath=".\include\Poco\AbstractStrategy.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\Poco\AccessExpirationDecorator.h"
 					>
 				</File>
 				<File
@@ -6624,6 +6630,14 @@
 					>
 				</File>
 				<File
+					RelativePath=".\include\Poco\ObjectPool.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\Poco\Optional.h"
+					>
+				</File>
+				<File
 					RelativePath=".\include\Poco\Platform.h"
 					>
 				</File>
@@ -6689,6 +6703,42 @@
 				</File>
 			</Filter>
 		</Filter>
+		<File
+			RelativePath="..\DLLVersion.rc"
+			>
+			<FileConfiguration
+				Name="debug_static_mt|Digi JumpStart (ARMV4I)"
+				ExcludedFromBuild="true"
+				>
+				<Tool
+					Name="VCResourceCompilerTool"
+				/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="release_static_mt|Digi JumpStart (ARMV4I)"
+				ExcludedFromBuild="true"
+				>
+				<Tool
+					Name="VCResourceCompilerTool"
+				/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="debug_static_md|Digi JumpStart (ARMV4I)"
+				ExcludedFromBuild="true"
+				>
+				<Tool
+					Name="VCResourceCompilerTool"
+				/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="release_static_md|Digi JumpStart (ARMV4I)"
+				ExcludedFromBuild="true"
+				>
+				<Tool
+					Name="VCResourceCompilerTool"
+				/>
+			</FileConfiguration>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

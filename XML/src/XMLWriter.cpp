@@ -1,7 +1,7 @@
 //
 // XMLWriter.cpp
 //
-// $Id: //poco/1.4/XML/src/XMLWriter.cpp#1 $
+// $Id: //poco/1.4/XML/src/XMLWriter.cpp#5 $
 //
 // Library: XML
 // Package: XML
@@ -321,6 +321,7 @@ void XMLWriter::emptyElement(const XMLString& namespaceURI, const XMLString& loc
 	_contentWritten = false;
 	writeMarkup("/");
 	closeStartTag();
+	_namespaces.popContext();
 }
 
 
@@ -608,13 +609,16 @@ void XMLWriter::writeStartElement(const XMLString& namespaceURI, const XMLString
 		_namespaces.pushContext();
 	_nsContextPushed = false;
 	++_elementCount;
+	
+	declareAttributeNamespaces(attributes);
+
 	writeMarkup(MARKUP_LT);
 	if (!localName.empty() && (qname.empty() || localName == qname))
 	{
 		XMLString prefix;
 		if (!namespaceURI.empty() && !_namespaces.isMapped(namespaceURI))
 		{
-			prefix = newPrefix();
+			prefix = uniquePrefix();
 			_namespaces.declarePrefix(prefix, namespaceURI);
 		}
 		else prefix = _namespaces.getPrefix(namespaceURI);
@@ -639,7 +643,6 @@ void XMLWriter::writeStartElement(const XMLString& namespaceURI, const XMLString
 	}
 	else throw XMLException("Tag mismatch", nameToString(localName, qname));
 
-	declareAttributeNamespaces(attributes);
 	AttributeMap attributeMap;
 	addNamespaceAttributes(attributeMap);
 	addAttributes(attributeMap, attributes, namespaceURI);
@@ -700,7 +703,7 @@ void XMLWriter::declareAttributeNamespaces(const Attributes& attributes)
 			if (prefix.empty()) prefix = _namespaces.getPrefix(namespaceURI);
 			if (prefix.empty() && !namespaceURI.empty() && !_namespaces.isMapped(namespaceURI))
 			{
-				prefix = newPrefix();
+				prefix = uniquePrefix();
 				_namespaces.declarePrefix(prefix, namespaceURI);
 			}
 
@@ -744,7 +747,7 @@ void XMLWriter::addAttributes(AttributeMap& attributeMap, const Attributes& attr
 		if (!localName.empty())
 		{
 			XMLString prefix;
-			if (namespaceURI != elementNamespaceURI)
+			if (!namespaceURI.empty())
 				prefix = _namespaces.getPrefix(namespaceURI);
 			if (!prefix.empty())
 			{
@@ -880,11 +883,17 @@ std::string XMLWriter::nameToString(const XMLString& localName, const XMLString&
 }
 
 
-XMLString XMLWriter::newPrefix()
+XMLString XMLWriter::uniquePrefix()
 {
 	std::ostringstream str;
 	str << "ns" << ++_prefix;
 	return toXMLString(str.str());
+}
+
+
+bool XMLWriter::isNamespaceMapped(const std::string& namespc) const
+{
+	return _namespaces.isMapped(namespc);
 }
 
 

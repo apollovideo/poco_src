@@ -2,32 +2,35 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Crypto">
-      <UniqueIdentifier>{8f4360b5-22d9-4932-a611-25a4ff4e13cd}</UniqueIdentifier>
+      <UniqueIdentifier>{b8c433e3-bd95-48e6-9eba-96cb855ece9f}</UniqueIdentifier>
     </Filter>
     <Filter Include="Crypto\Header Files">
-      <UniqueIdentifier>{06c812d2-3da1-49b3-b896-acf74792ce5e}</UniqueIdentifier>
+      <UniqueIdentifier>{8093a787-9b1c-4bb3-9641-947f25e62e36}</UniqueIdentifier>
     </Filter>
     <Filter Include="Crypto\Source Files">
-      <UniqueIdentifier>{90d0c8d1-8f2a-40f1-89a6-79d1f71dc55c}</UniqueIdentifier>
+      <UniqueIdentifier>{ffab6f7c-5a0f-4880-b679-803874b4d9e3}</UniqueIdentifier>
     </Filter>
     <Filter Include="_Suite">
-      <UniqueIdentifier>{3d186750-3ae7-423d-a5c1-c1a136cefada}</UniqueIdentifier>
+      <UniqueIdentifier>{0d1c8d80-b652-44b8-83d9-b3a51e486868}</UniqueIdentifier>
     </Filter>
     <Filter Include="_Suite\Header Files">
-      <UniqueIdentifier>{1891c285-878c-4f4b-8d0d-7dbd0a078f48}</UniqueIdentifier>
+      <UniqueIdentifier>{c74c0344-4b5b-443f-8d0b-49a2c3cbf611}</UniqueIdentifier>
     </Filter>
     <Filter Include="_Suite\Source Files">
-      <UniqueIdentifier>{128a9cd1-c6b5-4210-bad7-e83d4569b166}</UniqueIdentifier>
+      <UniqueIdentifier>{bd6b6cdd-accd-44d9-971f-f724361239d9}</UniqueIdentifier>
     </Filter>
     <Filter Include="_Driver">
-      <UniqueIdentifier>{c146723d-e5f3-40b3-8470-e20d1ef9b793}</UniqueIdentifier>
+      <UniqueIdentifier>{23bb52f6-9eaa-4770-9423-cdba2efc95db}</UniqueIdentifier>
     </Filter>
     <Filter Include="_Driver\Source Files">
-      <UniqueIdentifier>{33229f46-dbd4-46a6-b43e-71b63e18bad5}</UniqueIdentifier>
+      <UniqueIdentifier>{a9eec5ef-3fe9-4c04-8eb9-f2cca2a09882}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\CryptoTest.h">
+      <Filter>Crypto\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DigestEngineTest.h">
       <Filter>Crypto\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\RSATest.h">
@@ -38,6 +41,9 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\DigestEngineTest.cpp">
+      <Filter>Crypto\Header Files</Filter>
+    </ClCompile>
     <ClCompile Include="src\CryptoTest.cpp">
       <Filter>Crypto\Source Files</Filter>
     </ClCompile>

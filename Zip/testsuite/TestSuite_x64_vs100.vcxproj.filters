@@ -2,28 +2,28 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Zip">
-      <UniqueIdentifier>{ed0eed00-d41a-4e96-b0c5-cf65b6afeb90}</UniqueIdentifier>
+      <UniqueIdentifier>{f9ff44c6-8f83-465d-9506-b9b49abc27c7}</UniqueIdentifier>
     </Filter>
     <Filter Include="Zip\Header Files">
-      <UniqueIdentifier>{149a6cd0-f695-4775-af7f-52dc9cbf787d}</UniqueIdentifier>
+      <UniqueIdentifier>{fc50ca4c-ae66-48a1-aa81-9bab5716243f}</UniqueIdentifier>
     </Filter>
     <Filter Include="Zip\Source Files">
-      <UniqueIdentifier>{acc91442-3458-4b1c-b065-f4e62017d1d5}</UniqueIdentifier>
+      <UniqueIdentifier>{0c2b2f07-5c84-47d3-b07c-dfe134e4b17e}</UniqueIdentifier>
     </Filter>
     <Filter Include="_Suite">
-      <UniqueIdentifier>{4a2fed50-5bd4-43ec-b812-908dcb8e58ac}</UniqueIdentifier>
+      <UniqueIdentifier>{7d93605a-1e4c-42b9-ace1-7c3ce8823796}</UniqueIdentifier>
     </Filter>
     <Filter Include="_Suite\Header Files">
-      <UniqueIdentifier>{ac5b523b-42e2-4e02-b49b-025f8e3bc32f}</UniqueIdentifier>
+      <UniqueIdentifier>{eee24e41-6ba2-4111-a822-300c81bdc84e}</UniqueIdentifier>
     </Filter>
     <Filter Include="_Suite\Source Files">
-      <UniqueIdentifier>{673617a2-e10d-4dc7-95c1-0c665cd24012}</UniqueIdentifier>
+      <UniqueIdentifier>{ea706360-013e-423c-935e-324c4146efb3}</UniqueIdentifier>
     </Filter>
     <Filter Include="_Driver">
-      <UniqueIdentifier>{1c352115-9a40-4aa8-8c5b-1f43d2beb9ac}</UniqueIdentifier>
+      <UniqueIdentifier>{dda31084-5547-42b5-9467-076a68904871}</UniqueIdentifier>
     </Filter>
     <Filter Include="_Driver\Source Files">
-      <UniqueIdentifier>{0d9024b8-a3b4-4f9d-a6cb-58a1ce951338}</UniqueIdentifier>
+      <UniqueIdentifier>{87f90694-9f8c-42f9-ab52-7c2bfc47bfc9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

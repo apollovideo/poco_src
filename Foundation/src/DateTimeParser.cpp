@@ -1,7 +1,7 @@
 //
 // DateTimeParser.cpp
 //
-// $Id: //poco/1.4/Foundation/src/DateTimeParser.cpp#1 $
+// $Id: //poco/1.4/Foundation/src/DateTimeParser.cpp#5 $
 //
 // Library: Foundation
 // Package: DateTime
@@ -48,12 +48,20 @@ namespace Poco {
 	while (it != end && !Ascii::isDigit(*it)) ++it
 
 
+#define SKIP_DIGITS() \
+	while (it != end && Ascii::isDigit(*it)) ++it
+
+
 #define PARSE_NUMBER(var) \
 	while (it != end && Ascii::isDigit(*it)) var = var*10 + ((*it++) - '0')
 
 
 #define PARSE_NUMBER_N(var, n) \
 	{ int i = 0; while (i++ < n && it != end && Ascii::isDigit(*it)) var = var*10 + ((*it++) - '0'); }
+
+
+#define PARSE_FRACTIONAL_N(var, n) \
+	{ int i = 0; while (i < n && it != end && Ascii::isDigit(*it)) { var = var*10 + ((*it++) - '0'); i++; } while (i++ < n) var *= 10; }
 
 
 void DateTimeParser::parse(const std::string& fmt, const std::string& str, DateTime& dateTime, int& timeZoneDifferential)
@@ -142,6 +150,17 @@ void DateTimeParser::parse(const std::string& fmt, const std::string& str, DateT
 					SKIP_JUNK();
 					PARSE_NUMBER_N(second, 2);
 					break;
+				case 's':
+					SKIP_JUNK();
+					PARSE_NUMBER_N(second, 2);
+					if (it != end && (*it == '.' || *it == ','))
+					{
+						++it;
+						PARSE_FRACTIONAL_N(millis, 3);
+						PARSE_FRACTIONAL_N(micros, 3);
+						SKIP_DIGITS();
+					}
+					break;
 				case 'i':
 					SKIP_JUNK();
 					PARSE_NUMBER_N(millis, 3);
@@ -153,8 +172,9 @@ void DateTimeParser::parse(const std::string& fmt, const std::string& str, DateT
 					break;
 				case 'F':
 					SKIP_JUNK();
-					PARSE_NUMBER_N(millis, 3);
-					PARSE_NUMBER_N(micros, 3);
+					PARSE_FRACTIONAL_N(millis, 3);
+					PARSE_FRACTIONAL_N(micros, 3);
+					SKIP_DIGITS();
 					break;
 				case 'z':
 				case 'Z':
@@ -223,12 +243,14 @@ bool DateTimeParser::tryParse(const std::string& str, DateTime& dateTime, int& t
 		return tryParse("%w, %e %b %r %H:%M:%S %Z", str, dateTime, timeZoneDifferential);
 	else if (str[3] == ' ')
 		return tryParse(DateTimeFormat::ASCTIME_FORMAT, str, dateTime, timeZoneDifferential);
-	else if (str.find(',') != std::string::npos)
+	else if (str.find(',') < 10)
 		return tryParse("%W, %e %b %r %H:%M:%S %Z", str, dateTime, timeZoneDifferential);
 	else if (Ascii::isDigit(str[0]))
 	{
 		if (str.find(' ') != std::string::npos || str.length() == 10)
 			return tryParse(DateTimeFormat::SORTABLE_FORMAT, str, dateTime, timeZoneDifferential);
+		else if (str.find('.') != std::string::npos || str.find(',') != std::string::npos)
+			return tryParse(DateTimeFormat::ISO8601_FRAC_FORMAT, str, dateTime, timeZoneDifferential);
 		else
 			return tryParse(DateTimeFormat::ISO8601_FORMAT, str, dateTime, timeZoneDifferential);
 	}
@@ -282,6 +304,7 @@ int DateTimeParser::parseTZD(std::string::const_iterator& it, const std::string:
 		{"AWDT",   9*3600}
 	};
 
+	int tzd = 0;
 	while (it != end && Ascii::isSpace(*it)) ++it;
 	if (it != end)
 	{
@@ -295,10 +318,13 @@ int DateTimeParser::parseTZD(std::string::const_iterator& it, const std::string:
 			for (unsigned i = 0; i < sizeof(zones)/sizeof(Zone); ++i)
 			{
 				if (designator == zones[i].designator)
-					return zones[i].timeZoneDifferential;
+				{
+					tzd = zones[i].timeZoneDifferential;
+					break;
+				}
 			}
 		}
-		else if (*it == '+' || *it == '-')
+		if (it != end && (*it == '+' || *it == '-'))
 		{
 			int sign = *it == '+' ? 1 : -1;
 			++it;
@@ -307,10 +333,10 @@ int DateTimeParser::parseTZD(std::string::const_iterator& it, const std::string:
 			if (it != end && *it == ':') ++it;
 			int minutes = 0;
 			PARSE_NUMBER_N(minutes, 2);
-			return sign*(hours*3600 + minutes*60);
+			tzd += sign*(hours*3600 + minutes*60);
 		}
 	}
-	return 0;
+	return tzd;
 }
 
 

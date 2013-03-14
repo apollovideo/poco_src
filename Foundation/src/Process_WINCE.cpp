@@ -1,7 +1,7 @@
 //
 // Process_WINCE.cpp
 //
-// $Id: //poco/1.4/Foundation/src/Process_WINCE.cpp#1 $
+// $Id: //poco/1.4/Foundation/src/Process_WINCE.cpp#4 $
 //
 // Library: Foundation
 // Package: Processes
@@ -67,6 +67,12 @@ UInt32 ProcessHandleImpl::id() const
 }
 
 
+HANDLE ProcessHandleImpl::process() const
+{
+	return _hProcess;
+}
+
+
 int ProcessHandleImpl::wait() const
 {
 	DWORD rc = WaitForSingleObject(_hProcess, INFINITE);
@@ -114,7 +120,7 @@ void ProcessImpl::timesImpl(long& userTime, long& kernelTime)
 }
 
 
-ProcessHandleImpl* ProcessImpl::launchImpl(const std::string& command, const ArgsImpl& args, Pipe* inPipe, Pipe* outPipe, Pipe* errPipe)
+ProcessHandleImpl* ProcessImpl::launchImpl(const std::string& command, const ArgsImpl& args, const std::string& initialDirectory, Pipe* inPipe, Pipe* outPipe, Pipe* errPipe, const EnvImpl& env)
 {
 	std::wstring ucommand;
 	UnicodeConverter::toUTF16(command, ucommand);
@@ -149,6 +155,17 @@ ProcessHandleImpl* ProcessImpl::launchImpl(const std::string& command, const Arg
 		return new ProcessHandleImpl(processInfo.hProcess, processInfo.dwProcessId);
 	}
 	else throw SystemException("Cannot launch process", command);
+}
+
+
+void ProcessImpl::killImpl(const ProcessHandleImpl& handle)
+{
+	if (TerminateProcess(handle.process(), 0) == 0)
+	{
+		CloseHandle(handle.process());
+		throw SystemException("cannot kill process");
+	}
+	CloseHandle(handle.process());
 }
 
 

@@ -1,7 +1,7 @@
 //
 // RSAKeyImpl.cpp
 //
-// $Id: //poco/1.4/Crypto/src/RSAKeyImpl.cpp#1 $
+// $Id: //poco/1.4/Crypto/src/RSAKeyImpl.cpp#5 $
 //
 // Library: Crypto
 // Package: RSA
@@ -41,6 +41,7 @@
 #include <sstream>
 #include <openssl/pem.h>
 #include <openssl/rsa.h>
+#include <openssl/evp.h>
 #if OPENSSL_VERSION_NUMBER >= 0x00908000L
 #include <openssl/bn.h>
 #endif
@@ -55,9 +56,7 @@ RSAKeyImpl::RSAKeyImpl(const X509Certificate& cert):
 {
 	const X509* pCert = cert.certificate();
 	EVP_PKEY* pKey = X509_get_pubkey(const_cast<X509*>(pCert));
-	
-	RSA* pRSA = pKey->pkey.rsa;
-	_pRSA = RSAPublicKey_dup(pRSA);
+	_pRSA = EVP_PKEY_get1_RSA(pKey);
 }
 
 
@@ -105,6 +104,12 @@ RSAKeyImpl::RSAKeyImpl(
 		if (rc)
 		{
 			RSA* pubKey = PEM_read_bio_RSAPublicKey(bio, &_pRSA, 0, 0);
+			if (!pubKey) 
+			{
+				int rc = BIO_seek(bio, 0);
+				if (rc != 0) throw Poco::FileException("Failed to load public key", publicKeyFile);
+				pubKey = PEM_read_bio_RSA_PUBKEY(bio, &_pRSA, 0, 0);
+			}
 			BIO_free(bio);
 			if (!pubKey)
 			{
@@ -160,6 +165,12 @@ RSAKeyImpl::RSAKeyImpl(std::istream* pPublicKeyStream, std::istream* pPrivateKey
 		BIO* bio = BIO_new_mem_buf(const_cast<char*>(publicKeyData.data()), static_cast<int>(publicKeyData.size()));
 		if (!bio) throw Poco::IOException("Cannot create BIO for reading public key");
 		RSA* publicKey = PEM_read_bio_RSAPublicKey(bio, &_pRSA, 0, 0);
+		if (!publicKey) 
+		{
+			int rc = BIO_seek(bio, 0);
+			if (rc != 0) throw Poco::FileException("Failed to load public key");
+			publicKey = PEM_read_bio_RSA_PUBKEY(bio, &_pRSA, 0, 0);
+		}
 		BIO_free(bio);
 		if (!publicKey)
 		{
@@ -206,6 +217,24 @@ void RSAKeyImpl::freeRSA()
 int RSAKeyImpl::size() const
 {
 	return RSA_size(_pRSA);
+}
+
+
+RSAKeyImpl::ByteVec RSAKeyImpl::modulus() const
+{
+	return convertToByteVec(_pRSA->n);
+}
+
+
+RSAKeyImpl::ByteVec RSAKeyImpl::encryptionExponent() const
+{
+	return convertToByteVec(_pRSA->e);
+}
+
+
+RSAKeyImpl::ByteVec RSAKeyImpl::decryptionExponent() const
+{
+	return convertToByteVec(_pRSA->d);
 }
 
 
@@ -299,6 +328,23 @@ void RSAKeyImpl::save(std::ostream* pPublicKeyStream, std::ostream* pPrivateKeyS
 		pPrivateKeyStream->write(pData, static_cast<std::streamsize>(size));
 		BIO_free(bio);
 	}
+}
+
+
+RSAKeyImpl::ByteVec RSAKeyImpl::convertToByteVec(const BIGNUM* bn)
+{
+	int numBytes = BN_num_bytes(bn);
+	ByteVec byteVector(numBytes);
+
+	ByteVec::value_type* buffer = new ByteVec::value_type[numBytes];
+	BN_bn2bin(bn, buffer);
+
+	for (int i = 0; i < numBytes; ++i)
+		byteVector[i] = buffer[i];
+
+	delete [] buffer;
+
+	return byteVector;
 }
 
 

@@ -163,7 +163,7 @@
 				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="0"
 				ObjectFile="$(IntDir)\"
-				ProgramDataBaseFileName="$(IntDir)\vc70.pdb"
+				ProgramDataBaseFileName="..\lib\PocoFoundationmdd.pdb"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="FALSE"
 				DebugInformationFormat="4"
@@ -270,7 +270,7 @@
 				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="0"
 				ObjectFile="$(IntDir)\"
-				ProgramDataBaseFileName="$(IntDir)\vc70.pdb"
+				ProgramDataBaseFileName="..\lib\PocoFoundationmtd.pdb"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="FALSE"
 				DebugInformationFormat="4"
@@ -888,6 +888,12 @@
 				</File>
 				<File
 					RelativePath=".\include\Poco\NumberParser.h">
+				</File>
+				<File
+					RelativePath=".\include\Poco\ObjectPool.h">
+				</File>
+				<File
+					RelativePath=".\include\Poco\Optional.h">
 				</File>
 				<File
 					RelativePath=".\include\Poco\Platform.h">
@@ -1847,9 +1853,6 @@
 					RelativePath=".\src\DigestStream.cpp">
 				</File>
 				<File
-					RelativePath=".\src\MD2Engine.cpp">
-				</File>
-				<File
 					RelativePath=".\src\MD4Engine.cpp">
 				</File>
 				<File
@@ -1876,9 +1879,6 @@
 				</File>
 				<File
 					RelativePath=".\include\Poco\HMACEngine.h">
-				</File>
-				<File
-					RelativePath=".\include\Poco\MD2Engine.h">
 				</File>
 				<File
 					RelativePath=".\include\Poco\MD4Engine.h">
@@ -2907,6 +2907,9 @@
 					</FileConfiguration>
 				</File>
 				<File
+					RelativePath=".\src\DirectoryWatcher.cpp">
+				</File>
+				<File
 					RelativePath=".\src\File.cpp">
 				</File>
 				<File
@@ -3248,6 +3251,9 @@
 				</File>
 				<File
 					RelativePath=".\include\Poco\DirectoryIterator_WIN32U.h">
+				</File>
+				<File
+					RelativePath=".\include\Poco\DirectoryWatcher.h">
 				</File>
 				<File
 					RelativePath=".\include\Poco\File.h">
@@ -4443,13 +4449,7 @@
 					RelativePath=".\include\Poco\AbstractPriorityDelegate.h">
 				</File>
 				<File
-					RelativePath=".\include\Poco\AccessExpirationDecorator.h">
-				</File>
-				<File
 					RelativePath=".\include\Poco\BasicEvent.h">
-				</File>
-				<File
-					RelativePath=".\include\Poco\CompareFunctions.h">
 				</File>
 				<File
 					RelativePath=".\include\Poco\DefaultStrategy.h">
@@ -4487,6 +4487,9 @@
 				<File
 					RelativePath=".\include\Poco\PriorityExpire.h">
 				</File>
+				<File
+					RelativePath=".\include\Poco\PriorityStrategy.h">
+				</File>
 			</Filter>
 			<Filter
 				Name="Source Files"
@@ -4511,6 +4514,9 @@
 				</File>
 				<File
 					RelativePath=".\include\Poco\AbstractStrategy.h">
+				</File>
+				<File
+					RelativePath=".\include\Poco\AccessExpirationDecorator.h">
 				</File>
 				<File
 					RelativePath=".\include\Poco\AccessExpireCache.h">
@@ -4610,6 +4616,33 @@
 				</File>
 			</Filter>
 		</Filter>
+		<File
+			RelativePath="..\DLLVersion.rc">
+			<FileConfiguration
+				Name="debug_static_md|Win32"
+				ExcludedFromBuild="TRUE">
+				<Tool
+					Name="VCResourceCompilerTool"/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="release_static_md|Win32"
+				ExcludedFromBuild="TRUE">
+				<Tool
+					Name="VCResourceCompilerTool"/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="debug_static_mt|Win32"
+				ExcludedFromBuild="TRUE">
+				<Tool
+					Name="VCResourceCompilerTool"/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="release_static_mt|Win32"
+				ExcludedFromBuild="TRUE">
+				<Tool
+					Name="VCResourceCompilerTool"/>
+			</FileConfiguration>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

@@ -1,7 +1,7 @@
 //
 // ZipStream.cpp
 //
-// $Id: //poco/1.4/Zip/src/ZipStream.cpp#1 $
+// $Id: //poco/1.4/Zip/src/ZipStream.cpp#3 $
 //
 // Library: Zip
 // Package: Zip
@@ -35,7 +35,6 @@
 
 
 #include "Poco/Zip/ZipStream.h"
-#include "Poco/zlib.h"
 #include "Poco/Zip/ZipArchive.h"
 #include "Poco/Zip/AutoDetectStream.h"
 #include "Poco/Zip/PartialStream.h"
@@ -44,6 +43,11 @@
 #include "Poco/Exception.h"
 #include "Poco/InflatingStream.h"
 #include "Poco/DeflatingStream.h"
+#if defined(POCO_UNBUNDLED)
+#include <zlib.h>
+#else
+#include "Poco/zlib.h"
+#endif
 
 
 namespace Poco {
@@ -82,7 +86,9 @@ ZipStreamBuf::ZipStreamBuf(std::istream& istr, const ZipLocalFileHeader& fileEnt
 			_ptrHelper = new AutoDetectInputStream(istr, init, crc, reposition, start);
 		}
 		else
+		{
 			_ptrHelper = new PartialInputStream(istr, start, end, reposition, init, crc);
+		}
 		_ptrBuf = new Poco::InflatingInputStream(*_ptrHelper, Poco::InflatingStreamBuf::STREAM_ZIP);
 	}
 	else if (fileEntry.getCompressionMethod() == ZipCommon::CM_STORE)
@@ -92,12 +98,11 @@ ZipStreamBuf::ZipStreamBuf(std::istream& istr, const ZipLocalFileHeader& fileEnt
 			_ptrBuf = new AutoDetectInputStream(istr, "", "", reposition, start);
 		}
 		else
+		{
 			_ptrBuf = new PartialInputStream(istr, start, end, reposition);
+		}
 	}
-	else
-	{
-		throw Poco::NotImplementedException("Unsupported compression method");
-	}
+	else throw Poco::NotImplementedException("Unsupported compression method");
 }
 
 
@@ -144,12 +149,11 @@ ZipStreamBuf::ZipStreamBuf(std::ostream& ostr, ZipLocalFileHeader& fileEntry, bo
 		}
 		else if (fileEntry.getCompressionMethod() == ZipCommon::CM_STORE)
 		{
-			_ptrOBuf = &ostr;
+			_ptrOHelper = new PartialOutputStream(*_pOstr, 0, 0, false);
+			_ptrOBuf = new PartialOutputStream(*_ptrOHelper, 0, 0, false);
 		}
-		else
-		{
-			throw Poco::NotImplementedException("Unsupported compression method");
-		}
+		else throw Poco::NotImplementedException("Unsupported compression method");
+
 		// now write the header to the ostr!
 		std::string header = fileEntry.createHeader();
 		ostr.write(header.c_str(), static_cast<std::streamsize>(header.size()));

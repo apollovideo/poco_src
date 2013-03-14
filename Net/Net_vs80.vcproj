@@ -182,6 +182,7 @@
 				ForceConformanceInForLoopScope="true"
 				RuntimeTypeInfo="true"
 				UsePrecompiledHeader="0"
+				ProgramDataBaseFileName="..\lib\PocoNetmtd.pdb"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="4"
@@ -294,6 +295,7 @@
 				ForceConformanceInForLoopScope="true"
 				RuntimeTypeInfo="true"
 				UsePrecompiledHeader="0"
+				ProgramDataBaseFileName="..\lib\PocoNetmdd.pdb"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="4"
@@ -539,6 +541,8 @@
 			<Filter
 				Name="Header Files">
 				<File
+					RelativePath=".\include\Poco\Net\HTTPAuthenticationParams.h"/>
+				<File
 					RelativePath=".\include\Poco\Net\HTTPBasicCredentials.h"/>
 				<File
 					RelativePath=".\include\Poco\Net\HTTPBasicStreamBuf.h"/>
@@ -548,6 +552,10 @@
 					RelativePath=".\include\Poco\Net\HTTPChunkedStream.h"/>
 				<File
 					RelativePath=".\include\Poco\Net\HTTPCookie.h"/>
+				<File
+					RelativePath=".\include\Poco\Net\HTTPCredentials.h"/>
+				<File
+					RelativePath=".\include\Poco\Net\HTTPDigestCredentials.h"/>
 				<File
 					RelativePath=".\include\Poco\Net\HTTPFixedLengthStream.h"/>
 				<File
@@ -566,6 +574,8 @@
 			<Filter
 				Name="Source Files">
 				<File
+					RelativePath=".\src\HTTPAuthenticationParams.cpp"/>
+				<File
 					RelativePath=".\src\HTTPBasicCredentials.cpp"/>
 				<File
 					RelativePath=".\src\HTTPBufferAllocator.cpp"/>
@@ -573,6 +583,10 @@
 					RelativePath=".\src\HTTPChunkedStream.cpp"/>
 				<File
 					RelativePath=".\src\HTTPCookie.cpp"/>
+				<File
+					RelativePath=".\src\HTTPCredentials.cpp"/>
+				<File
+					RelativePath=".\src\HTTPDigestCredentials.cpp"/>
 				<File
 					RelativePath=".\src\HTTPFixedLengthStream.cpp"/>
 				<File
@@ -842,6 +856,60 @@
 					RelativePath=".\src\RemoteSyslogListener.cpp"/>
 			</Filter>
 		</Filter>
+		<Filter
+			Name="WebSocket">
+			<Filter
+				Name="Header Files">
+				<File
+					RelativePath=".\include\Poco\Net\WebSocket.h"/>
+				<File
+					RelativePath=".\include\Poco\Net\WebSocketImpl.h"/>
+			</Filter>
+			<Filter
+				Name="Source Files">
+				<File
+					RelativePath=".\src\WebSocket.cpp"/>
+				<File
+					RelativePath=".\src\WebSocketImpl.cpp"/>
+			</Filter>
+		</Filter>
+		<File
+			RelativePath="..\DLLVersion.rc">
+			<FileConfiguration
+				Name="debug_shared|Win32">
+				<Tool
+					Name="VCResourceCompilerTool"/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="release_shared|Win32">
+				<Tool
+					Name="VCResourceCompilerTool"/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="debug_static_mt|Win32"
+				ExcludedFromBuild="true">
+				<Tool
+					Name="VCResourceCompilerTool"/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="release_static_mt|Win32"
+				ExcludedFromBuild="true">
+				<Tool
+					Name="VCResourceCompilerTool"/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="debug_static_md|Win32"
+				ExcludedFromBuild="true">
+				<Tool
+					Name="VCResourceCompilerTool"/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="release_static_md|Win32"
+				ExcludedFromBuild="true">
+				<Tool
+					Name="VCResourceCompilerTool"/>
+			</FileConfiguration>
+		</File>
 	</Files>
 	<Globals/>
 </VisualStudioProject>

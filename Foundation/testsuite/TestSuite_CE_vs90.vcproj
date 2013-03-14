@@ -647,6 +647,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\src\ObjectPoolTest.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\src\RegularExpressionTest.cpp"
 					>
 				</File>
@@ -732,6 +736,10 @@
 				</File>
 				<File
 					RelativePath=".\src\NumberParserTest.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\ObjectPoolTest.h"
 					>
 				</File>
 				<File
@@ -895,10 +903,6 @@
 					>
 				</File>
 				<File
-					RelativePath=".\src\MD2EngineTest.cpp"
-					>
-				</File>
-				<File
 					RelativePath=".\src\MD4EngineTest.cpp"
 					>
 				</File>
@@ -932,10 +936,6 @@
 				</File>
 				<File
 					RelativePath=".\src\HMACEngineTest.h"
-					>
-				</File>
-				<File
-					RelativePath=".\src\MD2EngineTest.h"
 					>
 				</File>
 				<File
@@ -1263,6 +1263,10 @@
 				Name="Source Files"
 				>
 				<File
+					RelativePath=".\src\DirectoryWatcherTest.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\src\FilesystemTestSuite.cpp"
 					>
 				</File>
@@ -1282,6 +1286,10 @@
 			<Filter
 				Name="Header Files"
 				>
+				<File
+					RelativePath=".\src\DirectoryWatcherTest.h"
+					>
+				</File>
 				<File
 					RelativePath=".\src\FilesystemTestSuite.h"
 					>

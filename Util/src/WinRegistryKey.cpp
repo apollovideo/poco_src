@@ -1,7 +1,7 @@
 //
 // WinRegistryKey.cpp
 //
-// $Id: //poco/1.4/Util/src/WinRegistryKey.cpp#2 $
+// $Id: //poco/1.4/Util/src/WinRegistryKey.cpp#8 $
 //
 // Library: Util
 // Package: Windows
@@ -34,6 +34,9 @@
 //
 
 
+#if !defined(_WIN32_WCE)
+
+
 #include "Poco/Util/WinRegistryKey.h"
 #include "Poco/Exception.h"
 #if defined(POCO_WIN32_UTF8)
@@ -48,6 +51,32 @@ using Poco::InvalidArgumentException;
 
 namespace Poco {
 namespace Util {
+
+
+namespace
+{
+	class AutoHandle
+	{
+	public:
+		AutoHandle(HMODULE h):
+			_h(h)
+		{
+		}
+		
+		~AutoHandle()
+		{
+			FreeLibrary(_h);
+		}
+		
+		HMODULE handle()
+		{
+			return _h;
+		}
+		
+	private:
+		HMODULE _h;
+	};
+}
 
 
 WinRegistryKey::WinRegistryKey(const std::string& key, bool readOnly, REGSAM extraSam):
@@ -93,7 +122,7 @@ void WinRegistryKey::setString(const std::string& name, const std::string& value
 	if (RegSetValueExW(_hKey, uname.c_str(), 0, REG_SZ, (CONST BYTE*) uvalue.c_str(), (DWORD) (uvalue.size() + 1)*sizeof(wchar_t)) != ERROR_SUCCESS)
 		handleSetError(name); 
 #else
-	if (RegSetValueEx(_hKey, name.c_str(), 0, REG_SZ, (CONST BYTE*) value.c_str(), (DWORD) value.size() + 1) != ERROR_SUCCESS)
+	if (RegSetValueExA(_hKey, name.c_str(), 0, REG_SZ, (CONST BYTE*) value.c_str(), (DWORD) value.size() + 1) != ERROR_SUCCESS)
 		handleSetError(name); 
 #endif
 }
@@ -122,12 +151,12 @@ std::string WinRegistryKey::getString(const std::string& name)
 		return result;
 	}
 #else
-	if (RegQueryValueEx(_hKey, name.c_str(), NULL, &type, NULL, &size) != ERROR_SUCCESS || type != REG_SZ && type != REG_EXPAND_SZ)
+	if (RegQueryValueExA(_hKey, name.c_str(), NULL, &type, NULL, &size) != ERROR_SUCCESS || type != REG_SZ && type != REG_EXPAND_SZ)
 		throw NotFoundException(key(name));
 	if (size > 0)
 	{
 		char* buffer = new char[size + 1];
-		RegQueryValueEx(_hKey, name.c_str(), NULL, NULL, (BYTE*) buffer, &size);
+		RegQueryValueExA(_hKey, name.c_str(), NULL, NULL, (BYTE*) buffer, &size);
 		buffer[size] = 0;
 		std::string result(buffer);
 		delete [] buffer;
@@ -149,7 +178,7 @@ void WinRegistryKey::setStringExpand(const std::string& name, const std::string&
 	if (RegSetValueExW(_hKey, uname.c_str(), 0, REG_EXPAND_SZ, (CONST BYTE*) uvalue.c_str(), (DWORD) (uvalue.size() + 1)*sizeof(wchar_t)) != ERROR_SUCCESS)
 		handleSetError(name); 
 #else
-	if (RegSetValueEx(_hKey, name.c_str(), 0, REG_EXPAND_SZ, (CONST BYTE*) value.c_str(), (DWORD) value.size() + 1) != ERROR_SUCCESS)
+	if (RegSetValueExA(_hKey, name.c_str(), 0, REG_EXPAND_SZ, (CONST BYTE*) value.c_str(), (DWORD) value.size() + 1) != ERROR_SUCCESS)
 		handleSetError(name); 
 #endif
 }
@@ -182,12 +211,12 @@ std::string WinRegistryKey::getStringExpand(const std::string& name)
 		return result;
 	}
 #else
-	if (RegQueryValueEx(_hKey, name.c_str(), NULL, &type, NULL, &size) != ERROR_SUCCESS || type != REG_SZ && type != REG_EXPAND_SZ)
+	if (RegQueryValueExA(_hKey, name.c_str(), NULL, &type, NULL, &size) != ERROR_SUCCESS || type != REG_SZ && type != REG_EXPAND_SZ)
 		throw NotFoundException(key(name));
 	if (size > 0)
 	{
 		char* buffer = new char[size + 1];
-		RegQueryValueEx(_hKey, name.c_str(), NULL, NULL, (BYTE*) buffer, &size);
+		RegQueryValueExA(_hKey, name.c_str(), NULL, NULL, (BYTE*) buffer, &size);
 		buffer[size] = 0;
 		char temp;
 		DWORD expSize = ExpandEnvironmentStringsA(buffer, &temp, 1);	
@@ -213,7 +242,7 @@ void WinRegistryKey::setInt(const std::string& name, int value)
 	if (RegSetValueExW(_hKey, uname.c_str(), 0, REG_DWORD, (CONST BYTE*) &data, sizeof(data)) != ERROR_SUCCESS)
 		handleSetError(name); 
 #else
-	if (RegSetValueEx(_hKey, name.c_str(), 0, REG_DWORD, (CONST BYTE*) &data, sizeof(data)) != ERROR_SUCCESS)
+	if (RegSetValueExA(_hKey, name.c_str(), 0, REG_DWORD, (CONST BYTE*) &data, sizeof(data)) != ERROR_SUCCESS)
 		handleSetError(name); 
 #endif
 }
@@ -231,7 +260,7 @@ int WinRegistryKey::getInt(const std::string& name)
 	if (RegQueryValueExW(_hKey, uname.c_str(), NULL, &type, (BYTE*) &data, &size) != ERROR_SUCCESS || type != REG_DWORD)
 		throw NotFoundException(key(name));
 #else
-	if (RegQueryValueEx(_hKey, name.c_str(), NULL, &type, (BYTE*) &data, &size) != ERROR_SUCCESS || type != REG_DWORD)
+	if (RegQueryValueExA(_hKey, name.c_str(), NULL, &type, (BYTE*) &data, &size) != ERROR_SUCCESS || type != REG_DWORD)
 		throw NotFoundException(key(name));
 #endif
 	return data;
@@ -247,7 +276,7 @@ void WinRegistryKey::deleteValue(const std::string& name)
 	if (RegDeleteValueW(_hKey, uname.c_str()) != ERROR_SUCCESS)
 		throw NotFoundException(key(name));
 #else
-	if (RegDeleteValue(_hKey, name.c_str()) != ERROR_SUCCESS)
+	if (RegDeleteValueA(_hKey, name.c_str()) != ERROR_SUCCESS)
 		throw NotFoundException(key(name));
 #endif
 }
@@ -266,12 +295,48 @@ void WinRegistryKey::deleteKey()
 		WinRegistryKey subRegKey(_hRootKey, subKey);
 		subRegKey.deleteKey();
 	}
+
+	// NOTE: RegDeleteKeyEx is only available on Windows XP 64-bit SP3, Windows Vista or later.
+	// We cannot call it directly as this would prevent the code running on Windows XP 32-bit.
+	// Therefore, if we need to call RegDeleteKeyEx (_extraSam != 0) we need to check for
+	// its existence in ADVAPI32.DLL and call it indirectly.
 #if defined(POCO_WIN32_UTF8)
 	std::wstring usubKey;
 	Poco::UnicodeConverter::toUTF16(_subKey, usubKey);
+	
+	typedef LONG (WINAPI *RegDeleteKeyExWFunc)(HKEY hKey, const wchar_t* lpSubKey, REGSAM samDesired, DWORD Reserved);
+	if (_extraSam != 0)
+	{
+		AutoHandle advAPI32(LoadLibraryW(L"ADVAPI32.DLL"));
+		if (advAPI32.handle())
+		{
+			RegDeleteKeyExWFunc pRegDeleteKeyExW = reinterpret_cast<RegDeleteKeyExWFunc>(GetProcAddress(advAPI32.handle() , "RegDeleteKeyExW"));
+			if (pRegDeleteKeyExW)
+			{
+				if ((*pRegDeleteKeyExW)(_hRootKey, usubKey.c_str(), _extraSam, 0) != ERROR_SUCCESS)
+					throw NotFoundException(key());
+				return;
+			}
+		}
+	}
 	if (RegDeleteKeyW(_hRootKey, usubKey.c_str()) != ERROR_SUCCESS)
 		throw NotFoundException(key());
 #else
+	typedef LONG (WINAPI *RegDeleteKeyExAFunc)(HKEY hKey, const char* lpSubKey, REGSAM samDesired, DWORD Reserved);
+	if (_extraSam != 0)
+	{
+		AutoHandle advAPI32(LoadLibraryA("ADVAPI32.DLL"));
+		if (advAPI32.handle())
+		{
+			RegDeleteKeyExAFunc pRegDeleteKeyExA = reinterpret_cast<RegDeleteKeyExAFunc>(GetProcAddress(advAPI32.handle() , "RegDeleteKeyExA"));
+			if (pRegDeleteKeyExA)
+			{
+				if ((*pRegDeleteKeyExA)(_hRootKey, _subKey.c_str(), _extraSam, 0) != ERROR_SUCCESS)
+					throw NotFoundException(key());
+				return;
+			}
+		}
+	}
 	if (RegDeleteKey(_hRootKey, _subKey.c_str()) != ERROR_SUCCESS)
 		throw NotFoundException(key());
 #endif
@@ -290,7 +355,7 @@ bool WinRegistryKey::exists()
 		return true;
 	}
 #else
-	if (RegOpenKeyEx(_hRootKey, _subKey.c_str(), 0, KEY_READ | _extraSam, &hKey) != ERROR_SUCCESS)
+	if (RegOpenKeyExA(_hRootKey, _subKey.c_str(), 0, KEY_READ | _extraSam, &hKey) == ERROR_SUCCESS)
 	{
 		RegCloseKey(hKey);
 		return true;
@@ -311,7 +376,7 @@ WinRegistryKey::Type WinRegistryKey::type(const std::string& name)
 	if (RegQueryValueExW(_hKey, uname.c_str(), NULL, &type, NULL, &size) != ERROR_SUCCESS)
 		throw NotFoundException(key(name));
 #else
-	if (RegQueryValueEx(_hKey, name.c_str(), NULL, &type, NULL, &size) != ERROR_SUCCESS)
+	if (RegQueryValueExA(_hKey, name.c_str(), NULL, &type, NULL, &size) != ERROR_SUCCESS)
 		throw NotFoundException(key(name));
 #endif
 	if (type != REG_SZ && type != REG_EXPAND_SZ && type != REG_DWORD)
@@ -337,9 +402,9 @@ bool WinRegistryKey::exists(const std::string& name)
 		RegCloseKey(hKey);
 	}
 #else
-	if (RegOpenKeyEx(_hRootKey, _subKey.c_str(), 0, KEY_READ | _extraSam, &hKey) != ERROR_SUCCESS)
+	if (RegOpenKeyExA(_hRootKey, _subKey.c_str(), 0, KEY_READ | _extraSam, &hKey) == ERROR_SUCCESS)
 	{
-		exists = RegQueryValueEx(hKey, name.c_str(), NULL, NULL, NULL, NULL) == ERROR_SUCCESS;
+		exists = RegQueryValueExA(hKey, name.c_str(), NULL, NULL, NULL, NULL) == ERROR_SUCCESS;
 		RegCloseKey(hKey);
 	}
 #endif
@@ -367,12 +432,12 @@ void WinRegistryKey::open()
 #else
 		if (_readOnly)
 		{
-			if (RegOpenKeyEx(_hRootKey, _subKey.c_str(), 0, KEY_READ | _extraSam, &_hKey) != ERROR_SUCCESS)
+			if (RegOpenKeyExA(_hRootKey, _subKey.c_str(), 0, KEY_READ | _extraSam, &_hKey) != ERROR_SUCCESS)
 				throw NotFoundException("Cannot open registry key: ", key());
 		}
 		else
 		{
-			if (RegCreateKeyEx(_hRootKey, _subKey.c_str(), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_READ | KEY_WRITE | _extraSam, NULL, &_hKey, NULL) != ERROR_SUCCESS)
+			if (RegCreateKeyExA(_hRootKey, _subKey.c_str(), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_READ | KEY_WRITE | _extraSam, NULL, &_hKey, NULL) != ERROR_SUCCESS)
 				throw SystemException("Cannot open registry key: ", key());
 		}
 #endif
@@ -480,7 +545,7 @@ void WinRegistryKey::subKeys(WinRegistryKey::Keys& keys)
 	DWORD bufSize = sizeof(buf);
 	for (DWORD i = 0; i< subKeyCount; ++i)
 	{
-		if (RegEnumKeyEx(_hKey, i, buf, &bufSize, NULL, NULL, NULL, NULL) == ERROR_SUCCESS)
+		if (RegEnumKeyExA(_hKey, i, buf, &bufSize, NULL, NULL, NULL, NULL) == ERROR_SUCCESS)
 		{
 			std::string name(buf);
 			keys.push_back(name);
@@ -519,7 +584,7 @@ void WinRegistryKey::values(WinRegistryKey::Values& vals)
 	DWORD bufSize = sizeof(buf);
 	for (DWORD i = 0; i< valueCount; ++i)
 	{
-		if (RegEnumValue(_hKey, i, buf, &bufSize, NULL, NULL, NULL, NULL) == ERROR_SUCCESS)
+		if (RegEnumValueA(_hKey, i, buf, &bufSize, NULL, NULL, NULL, NULL) == ERROR_SUCCESS)
 		{
 			std::string name(buf);
 			vals.push_back(name);
@@ -531,3 +596,6 @@ void WinRegistryKey::values(WinRegistryKey::Values& vals)
 
 
 } } // namespace Poco::Util
+
+
+#endif // !defined(_WIN32_WCE)

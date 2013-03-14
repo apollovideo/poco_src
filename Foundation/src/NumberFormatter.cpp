@@ -1,7 +1,7 @@
 //
 // NumberFormatter.cpp
 //
-// $Id: //poco/1.4/Foundation/src/NumberFormatter.cpp#1 $
+// $Id: //poco/1.4/Foundation/src/NumberFormatter.cpp#5 $
 //
 // Library: Foundation
 // Package: Core
@@ -35,10 +35,15 @@
 
 
 #include "Poco/NumberFormatter.h"
+#include "Poco/MemoryStream.h"
+#include <iomanip>
+#if !defined(POCO_NO_LOCALE)
+#include <locale>
+#endif
 #include <cstdio>
 
 
-#if defined(_MSC_VER)
+#if defined(_MSC_VER) || defined(__MINGW32__)
 	#define I64_FMT "I64"
 #elif defined(__APPLE__) 
 	#define I64_FMT "q"
@@ -335,16 +340,24 @@ void NumberFormatter::appendHex(std::string& str, UInt64 value, int width)
 void NumberFormatter::append(std::string& str, float value)
 {
 	char buffer[64];
-	std::sprintf(buffer, "%.*g", 8, (double) value);
-	str.append(buffer);
+	Poco::MemoryOutputStream ostr(buffer, sizeof(buffer));
+#if !defined(POCO_NO_LOCALE)
+	ostr.imbue(std::locale::classic());
+#endif
+	ostr << std::setprecision(8) << value;
+	str.append(buffer, static_cast<std::string::size_type>(ostr.charsWritten()));
 }
 
 
 void NumberFormatter::append(std::string& str, double value)
 {
 	char buffer[64];
-	std::sprintf(buffer, "%.*g", 16, value);
-	str.append(buffer);
+	Poco::MemoryOutputStream ostr(buffer, sizeof(buffer));
+#if !defined(POCO_NO_LOCALE)
+	ostr.imbue(std::locale::classic());
+#endif
+	ostr << std::setprecision(16) << value;
+	str.append(buffer, static_cast<std::string::size_type>(ostr.charsWritten()));
 }
 
 
@@ -353,8 +366,12 @@ void NumberFormatter::append(std::string& str, double value, int precision)
 	poco_assert (precision >= 0 && precision < 32);
 
 	char buffer[64];
-	std::sprintf(buffer, "%.*f", precision, value);
-	str.append(buffer);
+	Poco::MemoryOutputStream ostr(buffer, sizeof(buffer));
+#if !defined(POCO_NO_LOCALE)
+	ostr.imbue(std::locale::classic());
+#endif
+	ostr << std::fixed << std::showpoint << std::setprecision(precision) << value;
+	str.append(buffer, static_cast<std::string::size_type>(ostr.charsWritten()));
 }
 
 
@@ -363,8 +380,12 @@ void NumberFormatter::append(std::string& str, double value, int width, int prec
 	poco_assert (width > 0 && width < 64 && precision >= 0 && precision < width);
 
 	char buffer[64];
-	std::sprintf(buffer, "%*.*f", width, precision, value);
-	str.append(buffer);
+	Poco::MemoryOutputStream ostr(buffer, sizeof(buffer));
+#if !defined(POCO_NO_LOCALE)
+	ostr.imbue(std::locale::classic());
+#endif
+	ostr << std::fixed << std::showpoint << std::setw(width) << std::setprecision(precision) << value;
+	str.append(buffer, static_cast<std::string::size_type>(ostr.charsWritten()));
 }
 
 

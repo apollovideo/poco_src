@@ -1,7 +1,7 @@
 //
 // WinRegistryConfiguration.cpp
 //
-// $Id: //poco/1.4/Util/src/WinRegistryConfiguration.cpp#1 $
+// $Id: //poco/1.4/Util/src/WinRegistryConfiguration.cpp#4 $
 //
 // Library: Util
 // Package: Windows
@@ -34,6 +34,9 @@
 //
 
 
+#if !defined(_WIN32_WCE)
+
+
 #include "Poco/Util/WinRegistryConfiguration.h"
 #include "Poco/Util/WinRegistryKey.h"
 #include "Poco/NumberFormatter.h"
@@ -45,12 +48,14 @@ namespace Poco {
 namespace Util {
 
 
-WinRegistryConfiguration::WinRegistryConfiguration(const std::string& rootPath): _rootPath(rootPath)
+WinRegistryConfiguration::WinRegistryConfiguration(const std::string& rootPath, REGSAM extraSam): _rootPath(rootPath), _extraSam(extraSam)
 {
 	// rootPath must end with backslash
-	std::string::iterator it = _rootPath.end();
-	if (*(--it) != '\\')
-		_rootPath.append("\\");
+	if (!_rootPath.empty())
+	{
+		if (_rootPath[_rootPath.length() - 1] != '\\')
+			_rootPath += '\\';
+	}
 }
 
 
@@ -62,8 +67,8 @@ WinRegistryConfiguration::~WinRegistryConfiguration()
 bool WinRegistryConfiguration::getRaw(const std::string& key, std::string& value) const
 {
 	std::string keyName;
-	std::string fullPath = _rootPath + ConvertToRegFormat(key, keyName);
-	WinRegistryKey aKey(fullPath, true);
+	std::string fullPath = _rootPath + convertToRegFormat(key, keyName);
+	WinRegistryKey aKey(fullPath, true, _extraSam);
 	bool exists = aKey.exists(keyName);
 	if (exists)
 	{
@@ -91,15 +96,18 @@ bool WinRegistryConfiguration::getRaw(const std::string& key, std::string& value
 void WinRegistryConfiguration::setRaw(const std::string& key, const std::string& value)
 {
 	std::string keyName;
-	std::string fullPath = _rootPath+ConvertToRegFormat(key, keyName);
-	WinRegistryKey aKey(fullPath);
+	std::string fullPath = _rootPath + convertToRegFormat(key, keyName);
+	WinRegistryKey aKey(fullPath, false, _extraSam);
 	aKey.setString(keyName, value);
 }
 
 
 void WinRegistryConfiguration::enumerate(const std::string& key, Keys& range) const
 {
-	if (key.empty())
+	std::string keyName;
+	std::string fullPath = _rootPath + convertToRegFormat(key, keyName);
+
+	if (fullPath.empty())
 	{
 		// return all root level keys
 		range.push_back("HKEY_CLASSES_ROOT");
@@ -111,9 +119,9 @@ void WinRegistryConfiguration::enumerate(const std::string& key, Keys& range) co
 	}
 	else
 	{
-		std::string keyName;
-		std::string fullPath = _rootPath+ConvertToRegFormat(key, keyName);
-		WinRegistryKey aKey(fullPath, true);
+		fullPath += '\\';
+		fullPath += keyName;
+		WinRegistryKey aKey(fullPath, true, _extraSam);
 		aKey.values(range);
 		aKey.subKeys(range);
 	}
@@ -126,7 +134,7 @@ void WinRegistryConfiguration::removeRaw(const std::string& key)
 }
 
 
-std::string WinRegistryConfiguration::ConvertToRegFormat(const std::string& key, std::string& value) const
+std::string WinRegistryConfiguration::convertToRegFormat(const std::string& key, std::string& value) const
 {
 	std::size_t pos = key.rfind('.');
 	if (pos == std::string::npos)
@@ -135,10 +143,13 @@ std::string WinRegistryConfiguration::ConvertToRegFormat(const std::string& key,
 		return std::string();
 	}
 	std::string prefix(key.substr(0,pos));
-	value = key.substr(pos+1);
+	value = key.substr(pos + 1);
 	Poco::translateInPlace(prefix, ".", "\\");
 	return prefix;
 }
 
 
 } } // namespace Poco::Util
+
+
+#endif // !defined(_WIN32_WCE)

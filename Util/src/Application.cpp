@@ -1,7 +1,7 @@
 //
 // Application.cpp
 //
-// $Id: //poco/1.4/Util/src/Application.cpp#2 $
+// $Id: //poco/1.4/Util/src/Application.cpp#6 $
 //
 // Library: Util
 // Package: Application
@@ -55,7 +55,7 @@
 #if defined(POCO_OS_FAMILY_WINDOWS)
 #include "Poco/UnWindows.h"
 #endif
-#if defined(POCO_OS_FAMILY_UNIX)
+#if defined(POCO_OS_FAMILY_UNIX) && !defined(POCO_VXWORKS)
 #include "Poco/SignalHandler.h"
 #endif
 #if defined(POCO_WIN32_UTF8) && !defined(POCO_NO_WSTRING)
@@ -113,13 +113,15 @@ Application::~Application()
 void Application::setup()
 {
 	poco_assert (_pInstance == 0);
-
+	
 	_pConfig->add(new SystemConfiguration, PRIO_SYSTEM, false, false);
 	_pConfig->add(new MapConfiguration, PRIO_APPLICATION, true, false);
 	
 	addSubsystem(new LoggingSubsystem);
 	
-#if defined(POCO_OS_FAMILY_UNIX)
+#if defined(POCO_OS_FAMILY_UNIX) && !defined(POCO_VXWORKS)
+	_workingDirAtLaunch = Path::current();
+
 	#if !defined(_DEBUG)
 	Poco::SignalHandler::install();
 	#endif
@@ -297,11 +299,13 @@ void Application::stopOptionsProcessing()
 
 int Application::run()
 {
-	int rc = EXIT_SOFTWARE;
-	initialize(*this);
+	int rc = EXIT_CONFIG;
 	try
 	{
+		initialize(*this);
+		rc = EXIT_SOFTWARE;
 		rc = main(_args);
+		uninitialize();
 	}
 	catch (Poco::Exception& exc)
 	{
@@ -315,7 +319,6 @@ int Application::run()
 	{
 		logger().fatal("system exception");
 	}
-	uninitialize();
 	return rc;
 }
 
@@ -369,7 +372,7 @@ void Application::processOptions()
 		std::string value;
 		if (processor.process(*it, name, value))
 		{
-			if (!name.empty()) // "--" option to end options processing
+			if (!name.empty()) // "--" option to end options processing or deferred argument
 			{
 				handleOption(name, value);
 			}
@@ -394,14 +397,14 @@ void Application::getApplicationPath(Poco::Path& appPath) const
 		}
 		else
 		{
-			appPath = Path::current();
+			appPath = _workingDirAtLaunch;
 			appPath.append(path);
 		}
 	}
 	else
 	{
 		if (!Path::find(Environment::get("PATH"), _command, appPath))
-			appPath = Path(Path::current(), _command);
+			appPath = Path(_workingDirAtLaunch, _command);
 		appPath.makeAbsolute();
 	}
 #elif defined(POCO_OS_FAMILY_WINDOWS)

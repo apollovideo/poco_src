@@ -1,7 +1,7 @@
 //
 // NumberParser.cpp
 //
-// $Id: //poco/1.4/Foundation/src/NumberParser.cpp#1 $
+// $Id: //poco/1.4/Foundation/src/NumberParser.cpp#6 $
 //
 // Library: Foundation
 // Package: Core
@@ -36,10 +36,16 @@
 
 #include "Poco/NumberParser.h"
 #include "Poco/Exception.h"
+#include "Poco/MemoryStream.h"
+#if !defined(POCO_NO_LOCALE)
+#include <locale>
+#endif
 #include <cstdio>
 
 
-#if defined(_MSC_VER)
+#if defined(POCO_LONG_IS_64_BIT)
+	#define I64_FMT "l"
+#elif defined(_MSC_VER) || defined(__MINGW32__ )
 	#define I64_FMT "I64"
 #elif defined(__APPLE__) 
 	#define I64_FMT "q"
@@ -118,7 +124,7 @@ Int64 NumberParser::parse64(const std::string& s)
 bool NumberParser::tryParse64(const std::string& s, Int64& value)
 {
 	char temp;
-	return std::sscanf(s.c_str(), "%"I64_FMT"d%c", &value, &temp) == 1;
+	return std::sscanf(s.c_str(), "%" I64_FMT "d%c", &value, &temp) == 1;
 }
 
 
@@ -135,7 +141,7 @@ UInt64 NumberParser::parseUnsigned64(const std::string& s)
 bool NumberParser::tryParseUnsigned64(const std::string& s, UInt64& value)
 {
 	char temp;
-	return std::sscanf(s.c_str(), "%"I64_FMT"u%c", &value, &temp) == 1;
+	return std::sscanf(s.c_str(), "%" I64_FMT "u%c", &value, &temp) == 1;
 }
 
 
@@ -152,7 +158,7 @@ UInt64 NumberParser::parseHex64(const std::string& s)
 bool NumberParser::tryParseHex64(const std::string& s, UInt64& value)
 {
 	char temp;
-	return std::sscanf(s.c_str(), "%"I64_FMT"x%c", &value, &temp) == 1;
+	return std::sscanf(s.c_str(), "%" I64_FMT "x%c", &value, &temp) == 1;
 }
 
 
@@ -171,8 +177,12 @@ double NumberParser::parseFloat(const std::string& s)
 	
 bool NumberParser::tryParseFloat(const std::string& s, double& value)
 {
-	char temp;
-	return std::sscanf(s.c_str(), "%lf%c", &value, &temp) == 1;
+	Poco::MemoryInputStream istr(s.data(), s.size());
+#if !defined(POCO_NO_LOCALE)
+	istr.imbue(std::locale::classic());
+#endif
+	istr >> value;
+	return istr.eof() && !istr.fail();
 }
 
 

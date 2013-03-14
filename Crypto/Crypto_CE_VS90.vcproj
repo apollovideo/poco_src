@@ -48,13 +48,14 @@
 			<Tool
 				Name="VCManagedResourceCompilerTool"/>
 			<Tool
-				Name="VCResourceCompilerTool"/>
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="_UNICODE;UNICODE;_WIN32_WCE"/>
 			<Tool
 				Name="VCPreLinkEventTool"/>
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/FORCE:MULTIPLE"
-				AdditionalDependencies="ws2_32.lib iphlpapi.lib libeay32mdd.lib ssleay32mdd.lib"
+				AdditionalDependencies="ws2_32.lib iphlpapi.lib libeay32.lib ssleay32.lib"
 				OutputFile="..\bin\$(PlatformName)\PocoCryptod.dll"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="..\lib\$(PlatformName)"
@@ -126,13 +127,14 @@
 			<Tool
 				Name="VCManagedResourceCompilerTool"/>
 			<Tool
-				Name="VCResourceCompilerTool"/>
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="_UNICODE;UNICODE;_WIN32_WCE"/>
 			<Tool
 				Name="VCPreLinkEventTool"/>
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/FORCE:MULTIPLE"
-				AdditionalDependencies="ws2_32.lib iphlpapi.lib libeay32md.lib ssleay32md.lib"
+				AdditionalDependencies="ws2_32.lib iphlpapi.lib libeay32.lib ssleay32.lib"
 				OutputFile="..\bin\$(PlatformName)\PocoCrypto.dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="..\lib\$(PlatformName)"
@@ -194,6 +196,7 @@
 				BufferSecurityCheck="true"
 				RuntimeTypeInfo="true"
 				UsePrecompiledHeader="0"
+				ProgramDataBaseFileName="..\lib\$(PlatformName)\PocoCryptomtd.pdb"
 				WarningLevel="3"
 				DebugInformationFormat="3"
 				CompileAs="0"
@@ -322,6 +325,7 @@
 				BufferSecurityCheck="true"
 				RuntimeTypeInfo="true"
 				UsePrecompiledHeader="0"
+				ProgramDataBaseFileName="..\lib\$(PlatformName)\PocoCryptomdd.pdb"
 				WarningLevel="3"
 				DebugInformationFormat="3"
 				CompileAs="0"
@@ -514,6 +518,56 @@
 					RelativePath=".\src\OpenSSLInitializer.cpp"/>
 			</Filter>
 		</Filter>
+		<Filter
+			Name="Digest">
+			<Filter
+				Name="Header Files">
+				<File
+					RelativePath=".\include\Poco\Crypto\DigestEngine.h"/>
+			</Filter>
+			<Filter
+				Name="Source Files">
+				<File
+					RelativePath=".\src\DigestEngine.cpp"/>
+			</Filter>
+		</Filter>
+		<File
+			RelativePath="..\DLLVersion.rc">
+			<FileConfiguration
+				Name="debug_shared|Digi JumpStart (ARMV4I)">
+				<Tool
+					Name="VCResourceCompilerTool"/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="release_shared|Digi JumpStart (ARMV4I)">
+				<Tool
+					Name="VCResourceCompilerTool"/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="debug_static_mt|Digi JumpStart (ARMV4I)"
+				ExcludedFromBuild="true">
+				<Tool
+					Name="VCResourceCompilerTool"/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="release_static_mt|Digi JumpStart (ARMV4I)"
+				ExcludedFromBuild="true">
+				<Tool
+					Name="VCResourceCompilerTool"/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="debug_static_md|Digi JumpStart (ARMV4I)"
+				ExcludedFromBuild="true">
+				<Tool
+					Name="VCResourceCompilerTool"/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="release_static_md|Digi JumpStart (ARMV4I)"
+				ExcludedFromBuild="true">
+				<Tool
+					Name="VCResourceCompilerTool"/>
+			</FileConfiguration>
+		</File>
 	</Files>
 	<Globals/>
 </VisualStudioProject>

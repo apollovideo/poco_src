@@ -1,7 +1,7 @@
 //
 // HTTPClientSession.cpp
 //
-// $Id: //poco/1.4/Net/src/HTTPClientSession.cpp#3 $
+// $Id: //poco/1.4/Net/src/HTTPClientSession.cpp#7 $
 //
 // Library: Net
 // Package: HTTPClient
@@ -41,6 +41,7 @@
 #include "Poco/Net/HTTPStream.h"
 #include "Poco/Net/HTTPFixedLengthStream.h"
 #include "Poco/Net/HTTPChunkedStream.h"
+#include "Poco/Net/HTTPBasicCredentials.h"
 #include "Poco/Net/NetException.h"
 #include "Poco/NumberFormatter.h"
 #include "Poco/CountingStream.h"
@@ -222,11 +223,15 @@ std::ostream& HTTPClientSession::sendRequest(HTTPRequest& request)
 			request.write(hos);
 			_pRequestStream = new HTTPChunkedOutputStream(*this);
 		}
-		else if (request.getContentLength() != HTTPMessage::UNKNOWN_CONTENT_LENGTH)
+		else if (request.hasContentLength())
 		{
 			Poco::CountingOutputStream cs;
 			request.write(cs);
+#if POCO_HAVE_INT64
+			_pRequestStream = new HTTPFixedLengthOutputStream(*this, request.getContentLength64() + cs.chars());
+#else
 			_pRequestStream = new HTTPFixedLengthOutputStream(*this, request.getContentLength() + cs.chars());
+#endif
 			request.write(*_pRequestStream);
 		}
 		else if (request.getMethod() != HTTPRequest::HTTP_PUT && request.getMethod() != HTTPRequest::HTTP_POST)
@@ -283,12 +288,16 @@ std::istream& HTTPClientSession::receiveResponse(HTTPResponse& response)
 
 	_mustReconnect = getKeepAlive() && !response.getKeepAlive();
 
-	if (!_expectResponseBody)
+	if (!_expectResponseBody || response.getStatus() < 200 || response.getStatus() == HTTPResponse::HTTP_NO_CONTENT || response.getStatus() == HTTPResponse::HTTP_NOT_MODIFIED)
 		_pResponseStream = new HTTPFixedLengthInputStream(*this, 0);
 	else if (response.getChunkedTransferEncoding())
 		_pResponseStream = new HTTPChunkedInputStream(*this);
-	else if (response.getContentLength() != HTTPMessage::UNKNOWN_CONTENT_LENGTH)
+	else if (response.hasContentLength())
+#if defined(POCO_HAVE_INT64)
+		_pResponseStream = new HTTPFixedLengthInputStream(*this, response.getContentLength64());
+#else
 		_pResponseStream = new HTTPFixedLengthInputStream(*this, response.getContentLength());
+#endif
 	else
 		_pResponseStream = new HTTPInputStream(*this);
 		
@@ -405,13 +414,35 @@ void HTTPClientSession::proxyAuthenticateImpl(HTTPRequest& request)
 {
 	if (!_proxyUsername.empty())
 	{
-		std::ostringstream ostr;
-		ostr << "Basic ";
-		Base64Encoder encoder(ostr);
-		encoder << _proxyUsername << ":" << _proxyPassword;
-		encoder.close();
-		request.set("Proxy-Authorization", ostr.str());
+		HTTPBasicCredentials creds(_proxyUsername, _proxyPassword);
+		creds.proxyAuthenticate(request);
 	}
+}
+
+
+StreamSocket HTTPClientSession::proxyConnect()
+{
+	HTTPClientSession proxySession(getProxyHost(), getProxyPort());
+	proxySession.setTimeout(getTimeout());
+	SocketAddress targetAddress(getHost(), getPort());
+	HTTPRequest proxyRequest(HTTPRequest::HTTP_CONNECT, targetAddress.toString(), HTTPMessage::HTTP_1_1);
+	HTTPResponse proxyResponse;
+	proxyRequest.set("Proxy-Connection", "keep-alive");
+	proxyRequest.set("Host", getHost());
+	proxyAuthenticateImpl(proxyRequest);
+	proxySession.setKeepAlive(true);
+	proxySession.sendRequest(proxyRequest);
+	proxySession.receiveResponse(proxyResponse);
+	if (proxyResponse.getStatus() != HTTPResponse::HTTP_OK)
+		throw HTTPException("Cannot establish proxy connection", proxyResponse.getReason());
+	return proxySession.detachSocket();
+}
+
+
+void HTTPClientSession::proxyTunnel()
+{
+	StreamSocket ss = proxyConnect();
+	attachSocket(ss);
 }
 
 

@@ -1,7 +1,7 @@
 //
 // OpenSSLInitializer.cpp
 //
-// $Id: //poco/1.4/Crypto/src/OpenSSLInitializer.cpp#1 $
+// $Id: //poco/1.4/Crypto/src/OpenSSLInitializer.cpp#3 $
 //
 // Library: Crypto
 // Package: CryotpCore
@@ -41,7 +41,7 @@
 #include <openssl/rand.h>
 #include <openssl/crypto.h>
 #include <openssl/err.h>
-#if SSLEAY_VERSION_NUMBER >= 0x0907000L
+#if OPENSSL_VERSION_NUMBER >= 0x0907000L
 #include <openssl/conf.h>
 #endif
 
@@ -57,9 +57,6 @@ namespace Crypto {
 Poco::FastMutex* OpenSSLInitializer::_mutexes(0);
 Poco::FastMutex OpenSSLInitializer::_mutex;
 int OpenSSLInitializer::_rc(0);
-
-
-static OpenSSLInitializer initializer;
 
 
 OpenSSLInitializer::OpenSSLInitializer()

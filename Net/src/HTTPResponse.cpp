@@ -1,7 +1,7 @@
 //
 // HTTPResponse.cpp
 //
-// $Id: //poco/1.4/Net/src/HTTPResponse.cpp#1 $
+// $Id: //poco/1.4/Net/src/HTTPResponse.cpp#3 $
 //
 // Library: Net
 // Package: HTTP
@@ -43,6 +43,7 @@
 #include "Poco/DateTimeFormat.h"
 #include "Poco/DateTimeParser.h"
 #include "Poco/Ascii.h"
+#include "Poco/String.h"
 
 
 using Poco::DateTime;
@@ -200,7 +201,7 @@ void HTTPResponse::getCookies(std::vector<HTTPCookie>& cookies) const
 {
 	cookies.clear();
 	NameValueCollection::ConstIterator it = find(SET_COOKIE);
-	while (it != end() && it->first == SET_COOKIE)
+	while (it != end() && Poco::icompare(it->first, SET_COOKIE) == 0)
 	{
 		NameValueCollection nvc;
 		splitParameters(it->second.begin(), it->second.end(), nvc);
@@ -235,7 +236,7 @@ void HTTPResponse::read(std::istream& istr)
 	while (Poco::Ascii::isSpace(ch)) ch = istr.get();
 	while (!Poco::Ascii::isSpace(ch) && ch != eof && status.length() < MAX_STATUS_LENGTH) { status += (char) ch; ch = istr.get(); }
 	if (!Poco::Ascii::isSpace(ch)) throw MessageException("Invalid HTTP status code");
-	while (Poco::Ascii::isSpace(ch)) ch = istr.get();
+	while (Poco::Ascii::isSpace(ch) && ch != '\r' && ch != '\n' && ch != eof) ch = istr.get();
 	while (ch != '\r' && ch != '\n' && ch != eof && reason.length() < MAX_REASON_LENGTH) { reason += (char) ch; ch = istr.get(); }
 	if (!Poco::Ascii::isSpace(ch)) throw MessageException("HTTP reason string too long");
 	if (ch == '\r') ch = istr.get();

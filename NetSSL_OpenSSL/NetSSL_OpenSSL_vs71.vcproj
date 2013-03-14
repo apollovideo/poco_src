@@ -42,7 +42,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libeay32mdd.lib ssleay32mdd.lib ws2_32.lib iphlpapi.lib"
+				AdditionalDependencies="libeay32.lib ssleay32.lib ws2_32.lib iphlpapi.lib"
 				OutputFile="..\bin\PocoNetSSLd.dll"
 				LinkIncremental="2"
 				SuppressStartupBanner="TRUE"
@@ -107,7 +107,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libeay32md.lib ssleay32md.lib ws2_32.lib iphlpapi.lib"
+				AdditionalDependencies="libeay32.lib ssleay32.lib ws2_32.lib iphlpapi.lib"
 				OutputFile="..\bin\PocoNetSSL.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
@@ -160,7 +160,7 @@
 				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="0"
 				ObjectFile="$(IntDir)\"
-				ProgramDataBaseFileName="$(IntDir)\vc70.pdb"
+				ProgramDataBaseFileName="..\lib\PocoNetSSLmtd.pdb"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="FALSE"
 				DebugInformationFormat="4"
@@ -269,7 +269,7 @@
 				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="0"
 				ObjectFile="$(IntDir)\"
-				ProgramDataBaseFileName="$(IntDir)\vc70.pdb"
+				ProgramDataBaseFileName="..\lib\PocoNetSSLmdd.pdb"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="FALSE"
 				DebugInformationFormat="4"
@@ -506,6 +506,43 @@
 					RelativePath=".\src\SecureSMTPClientSession.cpp"/>
 			</Filter>
 		</Filter>
+		<File
+			RelativePath="..\DLLVersion.rc">
+			<FileConfiguration
+				Name="debug_shared|Win32">
+				<Tool
+					Name="VCResourceCompilerTool"/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="release_shared|Win32">
+				<Tool
+					Name="VCResourceCompilerTool"/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="debug_static_mt|Win32"
+				ExcludedFromBuild="TRUE">
+				<Tool
+					Name="VCResourceCompilerTool"/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="release_static_mt|Win32"
+				ExcludedFromBuild="TRUE">
+				<Tool
+					Name="VCResourceCompilerTool"/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="debug_static_md|Win32"
+				ExcludedFromBuild="TRUE">
+				<Tool
+					Name="VCResourceCompilerTool"/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="release_static_md|Win32"
+				ExcludedFromBuild="TRUE">
+				<Tool
+					Name="VCResourceCompilerTool"/>
+			</FileConfiguration>
+		</File>
 	</Files>
 	<Globals/>
 </VisualStudioProject>
