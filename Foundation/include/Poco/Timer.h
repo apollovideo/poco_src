@@ -86,7 +86,7 @@ class Foundation_API Timer: protected Runnable
 	/// there is a limit to the number of available concurrent timers.
 {
 public:
-	Timer(long startInterval = 0, long periodicInterval = 0);
+	Timer(Int64 startInterval = 0, Int64 periodicInterval = 0);
 		/// Creates a new timer object. StartInterval and periodicInterval
 		/// are given in milliseconds. If a periodicInterval of zero is 
 		/// specified, the callback will only be called once, after the
@@ -135,21 +135,21 @@ public:
 		/// Restarts the periodic interval. If the callback method is already running,
 		/// nothing will happen.
 
-	void restart(long milliseconds);
+	void restart(Int64 milliseconds);
 		/// Sets a new periodic interval and restarts the timer.
 		/// An interval of 0 will stop the timer.
 
-	long getStartInterval() const;
+	Int64 getStartInterval() const;
 		/// Returns the start interval.
 
-	void setStartInterval(long milliseconds);
+	void setStartInterval(Int64 milliseconds);
 		/// Sets the start interval. Will only be 
 		/// effective before start() is called.
 
-	long getPeriodicInterval() const;
+	Int64 getPeriodicInterval() const;
 		/// Returns the periodic interval.
 
-	void setPeriodicInterval(long milliseconds);
+	void setPeriodicInterval(Int64 milliseconds);
 		/// Sets the periodic interval. If the timer is already running
 		/// the new interval will be effective when the current interval
 		/// expires.
@@ -163,8 +163,8 @@ protected:
 	void run();
 
 private:
-	volatile long _startInterval;
-	volatile long _periodicInterval;
+	volatile Int64 _startInterval;
+	volatile Int64 _periodicInterval;
 	Event         _wakeUp;
 	Event         _done;
 	long          _skipped;

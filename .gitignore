@@ -1,0 +1,28 @@
+# Visual Studio
+*.APS
+*.aps
+*.bin
+ipch/
+.*log
+*.ncb
+*.opensdf
+*.rc
+*.sbr
+*.sdf
+*.suo
+Thumbs.db
+*.user
+*.vscc
+*.vspcc
+*.vssscc
+
+# Generic Build Directories
+[Bb]in/
+[Bb]uild/
+[Dd]ebug/
+[Dd]eploy/
+[Dd]ist/
+[Ll]ib/
+[Oo]bj/
+[Rr]elease/
+

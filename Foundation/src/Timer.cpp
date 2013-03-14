@@ -43,7 +43,7 @@
 namespace Poco {
 
 
-Timer::Timer(long startInterval, long periodicInterval): 
+Timer::Timer(Int64 startInterval, Int64 periodicInterval): 
 	_startInterval(startInterval), 
 	_periodicInterval(periodicInterval),
 	_skipped(0),
@@ -118,7 +118,7 @@ void Timer::restart()
 }
 
 
-void Timer::restart(long milliseconds)
+void Timer::restart(Int64 milliseconds)
 {
 	poco_assert (milliseconds >= 0);
 	FastMutex::ScopedLock lock(_mutex);
@@ -130,14 +130,14 @@ void Timer::restart(long milliseconds)
 }
 
 
-long Timer::getStartInterval() const
+Int64 Timer::getStartInterval() const
 {
 	FastMutex::ScopedLock lock(_mutex);
 	return _startInterval;
 }
 
 
-void Timer::setStartInterval(long milliseconds)
+void Timer::setStartInterval(Int64 milliseconds)
 {
 	poco_assert (milliseconds >= 0);
 	FastMutex::ScopedLock lock(_mutex);
@@ -145,14 +145,14 @@ void Timer::setStartInterval(long milliseconds)
 }
 
 
-long Timer::getPeriodicInterval() const
+Int64 Timer::getPeriodicInterval() const
 {
 	FastMutex::ScopedLock lock(_mutex);
 	return _periodicInterval;
 }
 
 
-void Timer::setPeriodicInterval(long milliseconds)
+void Timer::setPeriodicInterval(Int64 milliseconds)
 {
 	poco_assert (milliseconds >= 0);
 	FastMutex::ScopedLock lock(_mutex);
@@ -163,7 +163,7 @@ void Timer::setPeriodicInterval(long milliseconds)
 void Timer::run()
 {
 	Poco::Timestamp now;
-	long interval(0);
+	Int64 interval(0);
 	do
 	{
 		long sleep(0);
