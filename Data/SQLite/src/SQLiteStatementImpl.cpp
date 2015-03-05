@@ -110,12 +110,20 @@ void SQLiteStatementImpl::compileImplImpl()
 		rc = sqlite3_prepare_v2(_pDB, pSql, -1, &pStmt, &pLeftover);
 		if (rc != SQLITE_OK)
 		{
+			std::string errmsg("SQLite errmsg: ");
+			errmsg += sqlite3_errmsg(_pDB);
+
 			if (pStmt) 
 			{
 				sqlite3_finalize(pStmt);
 			}
 			pStmt = 0;
-			Utility::throwException(rc, statement);
+
+			errmsg += " [SQL: ";
+			errmsg += statement;
+			errmsg += "]";
+
+			Utility::throwException(rc, /*statement*/errmsg);
 		}
 		else if (rc == SQLITE_OK && pStmt)
 		{
@@ -243,7 +251,12 @@ bool SQLiteStatementImpl::hasNext()
 
 	if (_nextResponse != SQLITE_ROW && _nextResponse != SQLITE_OK && _nextResponse != SQLITE_DONE)
 	{
-		Utility::throwException(_nextResponse, toString());
+		std::string errmsg("SQLite errmsg: ");
+		errmsg += sqlite3_errmsg(_pDB);
+		errmsg += " [SQL: ";
+		errmsg += toString();
+		errmsg += "]";
+		Utility::throwException(_nextResponse, /*toString()*/errmsg);
 	}
 
 	return (_nextResponse == SQLITE_ROW);
