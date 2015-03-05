@@ -71,8 +71,8 @@ public:
 	struct DiagnosticFields
 	{
 		/// SQLGetDiagRec fields
-		SQLCHAR    _sqlState[SQL_STATE_SIZE];
-		SQLCHAR    _message[SQL_MESSAGE_LENGTH];
+		SQLTCHAR    _sqlState[SQL_STATE_SIZE];
+		SQLTCHAR    _message[SQL_MESSAGE_LENGTH];
 		SQLINTEGER _nativeError;
 	};
 
