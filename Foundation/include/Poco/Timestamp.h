@@ -128,7 +128,8 @@ public:
 		///
 		/// Same as epochMicroseconds().
 	
-	static Timestamp fromEpochTime(std::time_t t);
+	//Argument type changed to be compatible with ViM built with _USE_32BIT_TIME_T.
+	static Timestamp fromEpochTime(__time64_t t);
 		/// Creates a timestamp from a std::time_t.
 		
 	static Timestamp fromUtcTime(UtcTimeVal val);
