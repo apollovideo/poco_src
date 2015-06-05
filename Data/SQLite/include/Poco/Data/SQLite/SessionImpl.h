@@ -117,6 +117,8 @@ public:
 	const std::string& connectorName() const;
 		/// Returns the name of the connector.
 
+	// AVT customization for backwards compatibility.
+	sqlite3* db();
 protected:
 	void setConnectionTimeout(const std::string& prop, const Poco::Any& value);
 	Poco::Any getConnectionTimeout(const std::string& prop);
@@ -138,6 +140,11 @@ private:
 //
 // inlines
 //
+inline sqlite3* SessionImpl::db()
+{
+	return _pDB;
+}
+
 inline bool SessionImpl::canTransact()
 {
 	return true;
