@@ -163,7 +163,7 @@ void Timer::setPeriodicInterval(Int64 milliseconds)
 void Timer::run()
 {
 	Poco::Clock now;
-	long interval(0);
+	Int64 interval(0);
 	do
 	{
 		long sleep(0);
