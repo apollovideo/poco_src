@@ -31,14 +31,21 @@ rem VS_VERSION is required argument. Default is build all.
 
 rem Change OPENSSL_DIR to match your setup
 set OPENSSL_DIR=C:\Apollo\vim\lib\OpenSSL
-rem Prompt for path to OpenSSL if the default doens't exist
-if not exist (%OPENSSL_DIR%) (
+rem Prompt for path to OpenSSL if the default doesn't exist
+if NOT exist %OPENSSL_DIR% (
 	set /P OPENSSL_DIR=Enter path to OpenSSL:
+
+	if NOT exist !OPENSSL_DIR! (
+		echo Error: OpenSSL directory not found - !OPENSSL_DIR!
+		goto buildfailed
+	)
 )
-set OPENSSL_INCLUDE=%OPENSSL_DIR%\include
-set OPENSSL_LIB=%OPENSSL_DIR%\lib;%OPENSSL_DIR%\lib\VC
+
+set OPENSSL_INCLUDE=!OPENSSL_DIR!\include
+set OPENSSL_LIB=!OPENSSL_DIR!\lib;!OPENSSL_DIR!\lib\VC
 set INCLUDE=%INCLUDE%;%OPENSSL_INCLUDE%
 set LIB=%LIB%;%OPENSSL_LIB%
+
 
 rem Change MYSQL_DIR to match your setup
 set MYSQL_DIR=C:\PROGRA~1\MySQL\MYSQLS~1.5
